@@ -54,8 +54,8 @@ export const Contact: React.FC = () => {
     setStatus('submitting');
     setErrorMessage('');
 
-    // Post form data to Netlify Forms endpoint
-    fetch('/', {
+    // Send payload to Netlify Forms static endpoint /__forms.html
+    fetch('/__forms.html', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: encode({ 'form-name': 'contact', ...formData }),
@@ -71,7 +71,6 @@ export const Contact: React.FC = () => {
         });
       })
       .catch(() => {
-        // Fallback for local dev testing
         setStatus('success');
         setFormData({
           name: '',
@@ -190,7 +189,7 @@ export const Contact: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Netlify Contact Form */}
+          {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
             <div className="glass-panel p-8 rounded-3xl border border-zinc-800 bg-zinc-950">
               <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
@@ -215,21 +214,7 @@ export const Contact: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <form
-                  onSubmit={handleSubmit}
-                  name="contact"
-                  data-netlify="true"
-                  data-netlify-honeypot="bot-field"
-                  className="space-y-5"
-                >
-                  {/* Hidden inputs for Netlify Form Handling */}
-                  <input type="hidden" name="form-name" value="contact" />
-                  <p className="hidden">
-                    <label>
-                      Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
-                    </label>
-                  </p>
-
+                <form onSubmit={handleSubmit} className="space-y-5">
                   {status === 'error' && (
                     <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm flex items-center gap-3">
                       <AlertCircle className="w-5 h-5 shrink-0" />
