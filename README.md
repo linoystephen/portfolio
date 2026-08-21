@@ -32,7 +32,11 @@ npm run studio
 
 ## Deploy the editing Studio
 
-Sanity can host the Studio separately:
+The editing Studio is hosted separately from Netlify at:
+
+`https://linoy-stephen-portfolio.sanity.studio/`
+
+Sign in with the GitHub account that owns the Sanity project. To update it after schema changes:
 
 ```bash
 npm run studio:deploy

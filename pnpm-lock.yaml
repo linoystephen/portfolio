@@ -30,7 +30,7 @@ importers:
         specifier: ^4.0.0
         version: 4.22.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.14(@types/react@19.2.18)(supports-color@8.1.1))(@types/node@26.2.0)(@types/react@19.2.18)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(supports-color@8.1.1)(yaml@2.9.0)
       styled-components:
-        specifier: ^6.1.0
+        specifier: ^6.5.3
         version: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       vite:
         specifier: ^7.0.0
