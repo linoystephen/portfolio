@@ -1,0 +1,5 @@
+.more-work{display:flex;align-items:center;justify-content:center;gap:24px;padding:50px 5vw;border-bottom:1px solid var(--line)}
+.more-work button{background:var(--blue);color:white;border:0;padding:17px 28px;font:800 11px var(--font);cursor:pointer}
+.more-work span{font-size:11px;color:#666}
+.hidden{display:none!important}
+.roles h3{color:var(--blue)}
