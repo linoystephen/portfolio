@@ -2,7 +2,7 @@ import {defineArrayMember,defineField,defineType} from 'sanity'
 export default defineType({name:'project',title:'Project',type:'document',fields:[
   defineField({name:'title',title:'Title',type:'string',validation:R=>R.required()}),
   defineField({name:'slug',title:'Slug',type:'slug',options:{source:'title',maxLength:96},validation:R=>R.required()}),
-  defineField({name:'category',title:'Category',type:'string',options:{list:['Brand Identity','Corporate Communications','Packaging & Regulatory Design','Exhibition & Event Branding','Editorial Design','Publication Design','Campaign Design','Motion Design','Web & UI Design','Corporate Video','AI-Assisted Creative']},validation:R=>R.required()}),
+  defineField({name:'category',title:'Category',type:'string',description:'Type any category name, such as Brand Identity, Packaging Design or Web & UI Design.',validation:R=>R.required().max(80)}),
   defineField({name:'summary',title:'Short description',type:'text',rows:3,validation:R=>R.required().max(240)}),
   defineField({name:'description',title:'Full case study',type:'text',rows:8}),
   defineField({name:'year',title:'Project year',type:'string'}),
