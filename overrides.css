@@ -26,8 +26,18 @@
 .more-work{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:36px 5vw 56px;border-bottom:1px solid var(--line)}
 .more-work button{background:var(--blue);color:white;border:1px solid var(--blue);padding:17px 28px;font:800 11px var(--font);cursor:pointer;transition:.2s ease}
 .more-work button:hover{background:var(--ink);border-color:var(--ink)}
+.more-work .secondary-page{background:white;color:var(--ink);border-color:#aaa}.more-work .secondary-page:hover{background:var(--ink);color:white}
 .more-work span{font-size:11px;color:#666}
 .hidden{display:none!important}
 .roles h3{color:var(--blue)}
 @media(max-width:900px){.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:64px 6vw}.hero-art{min-height:500px}.projects{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.hero-copy{padding:48px 22px}.hero h1{font-size:3.25rem}.hero-art{min-height:380px}.hero-art-caption{left:14px;right:14px;bottom:14px;flex-direction:column;gap:4px}.projects{grid-template-columns:1fr}.project-copy{min-height:260px;padding:26px 22px}.more-work{align-items:flex-start;flex-direction:column}.more-work button{width:100%}}
+#projectModal>header{padding:56px 6vw 38px}
+#projectModal>header h2{font-size:clamp(2.1rem,4vw,4rem);line-height:1;letter-spacing:-.045em;margin:16px 0}
+#projectModal>header p{font-size:15px;max-width:700px}
+.case-copy{padding:44px 6vw;font-size:17px;line-height:1.65}
+.case-meta{padding:24px 6vw}
+.case-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:8px;background:#e8e8e4}
+.case-gallery img,.case-gallery video,.case-gallery iframe{height:100%;min-height:320px;object-fit:cover;background:white}
+.case-gallery iframe{aspect-ratio:16/9}
+@media(max-width:700px){.case-gallery{grid-template-columns:1fr}.case-gallery img,.case-gallery video,.case-gallery iframe{min-height:240px}}
