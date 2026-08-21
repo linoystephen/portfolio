@@ -1,43 +1,41 @@
 'use client';
-
 import React from 'react';
-import { ArrowUp, Palette } from 'lucide-react';
-import { linoyProfile } from '../data/portfolioData';
+import { ArrowUp, Phone, Mail } from 'lucide-react';
+import { LinkedinIcon } from './SocialIcons';
 
-export const Footer: React.FC = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  return (
-    <footer className="bg-zinc-950 border-t border-zinc-900 py-12 relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Brand Info */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-red-600/15 border border-red-500/30 flex items-center justify-center text-red-500">
-              <Palette className="w-4 h-4" />
-            </div>
-            <span className="text-white font-bold text-sm">
-              {linoyProfile.name} <span className="text-red-500">Creative Studio</span>
-            </span>
-          </div>
-
-          {/* Copyright */}
-          <div className="text-zinc-400 text-xs flex items-center gap-1.5 text-center">
-            <span>© {new Date().getFullYear()} {linoyProfile.name}. Senior Graphic & Web Designer — Dubai, UAE</span>
-          </div>
-
-          {/* Back to Top */}
-          <button
-            onClick={scrollToTop}
-            className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-red-500 border border-zinc-800 transition-all hover:scale-105"
-          >
-            <span>Back to Top</span>
-            <ArrowUp className="w-3.5 h-3.5 text-red-500" />
-          </button>
-        </div>
+export const Footer: React.FC = () => (
+  <footer className="bg-[#07070A] border-t border-white/5">
+    <div className="container-xl py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      {/* Brand */}
+      <div className="flex flex-col items-center sm:items-start">
+        <span className="text-sm font-black tracking-tight text-white uppercase">Linoy Stephen</span>
+        <span className="text-[10px] tracking-widest text-[#6B6B74] uppercase">Senior Graphic Designer • Dubai, UAE</span>
       </div>
-    </footer>
-  );
-};
+
+      {/* Quick links */}
+      <div className="flex items-center gap-5 text-[10px] font-mono text-[#6B6B74] tracking-wider">
+        <a href="tel:+971552805458" className="flex items-center gap-1 hover:text-[#E8192C] transition-colors">
+          <Phone className="w-3 h-3" />+971-552805458
+        </a>
+        <a href="mailto:linoystephen@gmail.com" className="flex items-center gap-1 hover:text-[#E8192C] transition-colors">
+          <Mail className="w-3 h-3" />linoystephen@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/linoystephen" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-[#E8192C] transition-colors">
+          <LinkedinIcon className="w-3 h-3" />LinkedIn
+        </a>
+      </div>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="p-3 rounded-full border border-white/10 text-[#6B6B74] hover:text-white hover:border-[#E8192C] transition-all"
+        aria-label="Back to top"
+      >
+        <ArrowUp className="w-4 h-4" />
+      </button>
+    </div>
+    <div className="text-center text-[10px] font-mono text-[#3a3a3f] pb-4">
+      © {new Date().getFullYear()} Linoy Stephen. All rights reserved.
+    </div>
+  </footer>
+);

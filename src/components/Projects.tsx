@@ -1,375 +1,267 @@
 'use client';
-
 import React, { useState } from 'react';
 import Image from 'next/image';
-import {
-  ExternalLink,
-  FolderGit2,
-  X,
-  ArrowUpRight,
-  Layers,
-  CheckCircle2,
-  Images,
-  Play,
-  Globe,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  ArrowRight,
-  RotateCcw,
-} from 'lucide-react';
-import { projectsData } from '../data/portfolioData';
-import { Project } from '../types/portfolio';
+import { X, ChevronLeft, ChevronRight, ExternalLink, Play } from 'lucide-react';
+
+interface Project {
+  title: string;
+  description: string;
+  category: string;
+  images: string[];
+  videoUrl?: string;
+  websiteUrl?: string;
+  deliverables?: string[];
+  tools?: string[];
+}
+
+const projects: Project[] = [
+  {
+    title: 'Shalina Healthcare — Brand Identity System',
+    description: 'Comprehensive brand identity guidelines, corporate stationery, and marketing collateral for one of Africa\'s leading pharmaceutical companies with presence in 20+ African countries.',
+    category: 'Brand Identity',
+    images: ['/images/brand-1.png', '/images/brand-2.png'],
+    deliverables: ['Brand Guidelines', 'Stationery System', 'Marketing Collateral', 'Digital Assets'],
+    tools: ['Adobe Illustrator', 'Adobe InDesign'],
+  },
+  {
+    title: 'Neopharma — Pharma Packaging System',
+    description: 'Full regulatory-compliant packaging artwork for Rx and OTC pharmaceutical products. Covers labelling, folding cartons, and patient information leaflets adhering to UAE MOH guidelines.',
+    category: 'Pharma Packaging',
+    images: ['/images/pharma-1.png', '/images/pharma-2.png'],
+    deliverables: ['Rx Pack Artwork', 'OTC Packaging', 'Patient Info Leaflets', 'Regulatory Inserts'],
+    tools: ['Adobe Illustrator', 'Adobe Photoshop'],
+  },
+  {
+    title: 'WHX — World Health Exhibition Booth',
+    description: 'Large-scale 12×6m exhibition booth design for the World Health Exhibition in Dubai. Full 3D visualisation, signage system, and print-ready production files.',
+    category: 'Exhibition',
+    images: ['/images/event-1.png', '/images/event-2.png'],
+    deliverables: ['3D Booth Design', 'Fabric Print Files', 'Signage System', 'Event Collateral'],
+    tools: ['Adobe Illustrator', 'CorelDraw'],
+  },
+  {
+    title: 'Corporate Motion Reel — After Effects',
+    description: 'High-energy corporate promotional video reel with motion graphics, kinetic typography, and branded animations produced using Adobe After Effects and Premiere Pro.',
+    category: 'Video & Motion',
+    images: ['/images/video-1.png'],
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    deliverables: ['Motion Graphic Reel', 'Branded Animations', 'Social Media Cuts'],
+    tools: ['Adobe After Effects', 'Adobe Premiere Pro'],
+  },
+  {
+    title: 'Nanobird Technologies — Web Design',
+    description: 'Full UI/UX design and WordPress development for a tech services company. Responsive, SEO-optimised with a clean corporate aesthetic and fast page performance.',
+    category: 'Web Design',
+    images: ['/images/web-1.png'],
+    websiteUrl: 'http://linoy.nanobirdtech.com',
+    deliverables: ['UI/UX Design', 'WordPress Dev', 'SEO Setup', 'Responsive Layout'],
+    tools: ['Adobe XD', 'WordPress', 'HTML/CSS'],
+  },
+  {
+    title: 'Royal Oman Police — Highway Code Book',
+    description: 'Complete design and layout of the Royal Oman Police Highway Code educational publication. Complex multi-page editorial design with infographics and bilingual Arabic/English content.',
+    category: 'Editorial',
+    images: ['/images/brand-2.png'],
+    deliverables: ['Publication Design', 'Infographics', 'Print-ready PDF', 'Bilingual Layout'],
+    tools: ['Adobe InDesign', 'Adobe Illustrator'],
+  },
+  {
+    title: 'Shell Oman — Annual Corporate Publication',
+    description: 'Design and production of Shell Oman\'s annual corporate magazine. Editorial layout, photography direction, and print management for a 120-page premium publication.',
+    category: 'Editorial',
+    images: ['/images/brand-1.png', '/images/brand-2.png'],
+    deliverables: ['Magazine Layout', 'Photography Direction', 'Print Management'],
+    tools: ['Adobe InDesign', 'Adobe Photoshop'],
+  },
+  {
+    title: 'CPHI Exhibition — Pharma Trade Show',
+    description: 'Complete branding and booth design for CPHI pharmaceutical trade show. From concept to production-ready artwork for a 200sqm exhibition space.',
+    category: 'Exhibition',
+    images: ['/images/event-2.png', '/images/event-1.png'],
+    deliverables: ['Booth Concept', 'Branding System', 'Large Format Print'],
+    tools: ['Adobe Illustrator', 'CorelDraw'],
+  },
+  {
+    title: 'Petroleum Development Oman — Campaign',
+    description: 'Multi-channel marketing campaign design for PDO\'s corporate social responsibility initiatives. Includes print, digital, and out-of-home advertising materials.',
+    category: 'Brand Identity',
+    images: ['/images/brand-1.png'],
+    deliverables: ['Campaign Design', 'OOH Advertising', 'Digital Banners', 'Print Collateral'],
+    tools: ['Adobe Illustrator', 'Adobe Photoshop', 'Adobe InDesign'],
+  },
+];
 
 const ITEMS_PER_PAGE = 6;
 
 export const Projects: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Project | null>(null);
+  const [imgIndex, setImgIndex] = useState(0);
 
-  const totalPages = Math.ceil(projectsData.length / ITEMS_PER_PAGE);
+  const total = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  const visible = projects.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  // Get current batch of 6 items (hiding previous items)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentProjects = projectsData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  const openProjectModal = (project: Project) => {
-    setSelectedProject(project);
-    setActiveImageIndex(0);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-      scrollToPortfolioTop();
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-      scrollToPortfolioTop();
-    }
-  };
-
-  const scrollToPortfolioTop = () => {
-    const el = document.getElementById('projects');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleNextImage = () => {
-    if (selectedProject?.galleryImages) {
-      setActiveImageIndex((prev) => (prev + 1) % selectedProject.galleryImages!.length);
-    }
-  };
-
-  const handlePrevImage = () => {
-    if (selectedProject?.galleryImages) {
-      setActiveImageIndex((prev) =>
-        prev === 0 ? selectedProject.galleryImages!.length - 1 : prev - 1
-      );
-    }
-  };
+  const open = (p: Project) => { setSelected(p); setImgIndex(0); };
+  const close = () => setSelected(null);
 
   return (
-    <section id="projects" className="relative py-24 bg-zinc-950 overflow-hidden">
-      {/* Ambient Red Glow */}
-      <div className="ambient-glow-gold top-1/3 -right-48 opacity-40" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 text-xs font-semibold uppercase tracking-wider mb-3">
-            <FolderGit2 className="w-3.5 h-3.5" />
-            <span>Design Portfolio</span>
+    <section id="works" className="section-pad bg-[#07070A]">
+      <div className="container-xl">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
+          <div>
+            <div className="section-label">Portfolio</div>
+            <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+              Selected <span className="font-editorial italic font-normal text-[#E8192C]">Works</span>
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Featured <span className="gradient-text-red">Design Works</span>
-          </h2>
-          <p className="text-zinc-400 text-base sm:text-lg max-w-2xl">
-            A visual showcase of brand identity guidelines, regulatory pharmaceutical packaging series, trade show exhibition booths, motion reels, and web platforms.
+          <p className="text-[#6B6B74] text-sm max-w-sm">
+            A curated selection from 20+ years of creative work across branding, packaging, exhibitions, video & web.
           </p>
-
-          {/* Page Counter Badge */}
-          <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono text-zinc-400 bg-zinc-900 px-3.5 py-1.5 rounded-full border border-zinc-800">
-            <span>Showing {startIndex + 1} – {Math.min(startIndex + ITEMS_PER_PAGE, projectsData.length)} of {projectsData.length} Projects</span>
-            <span className="text-red-500 font-bold">• Page {currentPage} of {totalPages}</span>
-          </div>
         </div>
 
-        {/* Current Batch Project Grid (6 Items max) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {currentProjects.map((project) => (
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {visible.map((p, i) => (
             <div
-              key={project.id}
-              onClick={() => openProjectModal(project)}
-              className="glass-panel rounded-2xl overflow-hidden border border-zinc-800/90 hover:border-red-500/50 transition-all duration-300 group cursor-pointer flex flex-col justify-between shadow-xl hover:shadow-red-950/30 hover:-translate-y-1.5 bg-zinc-950"
+              key={i}
+              className="work-card group bg-[#0E0E12] border border-white/7 rounded-2xl overflow-hidden cursor-pointer"
+              style={{ aspectRatio: i % 5 === 0 ? '4/3' : i % 3 === 1 ? '3/4' : '1/1' }}
+              onClick={() => open(p)}
             >
-              {/* Image Preview Container */}
-              <div className="relative h-64 w-full overflow-hidden bg-zinc-900">
+              <div className="relative w-full h-full min-h-[220px]">
                 <Image
-                  src={project.coverImage}
-                  alt={project.title}
+                  src={p.images[0]}
+                  alt={p.title}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-
-                {/* Media Indicator Icons */}
-                <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                  {project.galleryImages && project.galleryImages.length > 1 && (
-                    <span
-                      className="p-1.5 rounded-full bg-zinc-950/85 backdrop-blur-md border border-zinc-800 text-red-400"
-                      title="Multi-image gallery"
-                    >
-                      <Images className="w-3.5 h-3.5" />
-                    </span>
-                  )}
-                  {project.videoUrl && (
-                    <span
-                      className="p-1.5 rounded-full bg-zinc-950/85 backdrop-blur-md border border-zinc-800 text-red-400"
-                      title="Video Reel Preview"
-                    >
-                      <Play className="w-3.5 h-3.5 fill-red-400" />
-                    </span>
-                  )}
-                  {project.websiteUrl && (
-                    <span
-                      className="p-1.5 rounded-full bg-zinc-950/85 backdrop-blur-md border border-zinc-800 text-white"
-                      title="Live Website"
-                    >
-                      <Globe className="w-3.5 h-3.5" />
-                    </span>
-                  )}
-                </div>
-
-                {/* Hover Overlay Button */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-950/40 backdrop-blur-xs">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-600 text-white text-xs font-bold shadow-lg">
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>View Artwork</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Body: Title & Description */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-red-500 transition-colors flex items-center justify-between mb-2">
-                    <span>{project.title}</span>
-                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-red-500 shrink-0" />
-                  </h3>
-                  <p className="text-zinc-400 text-sm line-clamp-3 leading-relaxed">
-                    {project.description}
-                  </p>
+                <div className="work-card-overlay">
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-[#E8192C] mb-1">{p.category}</span>
+                  <h3 className="text-sm font-bold text-white leading-snug mb-1">{p.title}</h3>
+                  <p className="text-xs text-[#9999A6] line-clamp-2">{p.description}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Classy Pagination / Load More Navigation Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 backdrop-blur-md">
-          {/* Previous Page Button */}
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white border border-zinc-800 text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-30 disabled:pointer-events-none"
-          >
-            <ChevronLeft className="w-4 h-4 text-red-500" />
-            <span>Previous Works</span>
-          </button>
-
-          {/* Page Indicators */}
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-              <button
-                key={pageNum}
-                onClick={() => {
-                  setCurrentPage(pageNum);
-                  scrollToPortfolioTop();
-                }}
-                className={`w-10 h-10 rounded-xl text-xs font-mono font-bold transition-all ${
-                  currentPage === pageNum
-                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 scale-105'
-                    : 'bg-zinc-950 text-zinc-400 hover:text-white border border-zinc-800'
-                }`}
-              >
-                {pageNum}
-              </button>
-            ))}
+        {/* Pagination */}
+        {total > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-12">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="btn-outline py-2.5 px-5 text-xs disabled:opacity-30"
+            >
+              Previous Works
+            </button>
+            <span className="text-[#6B6B74] text-xs font-mono">
+              {page} / {total}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(total, p + 1))}
+              disabled={page === total}
+              className="btn-red py-2.5 px-5 text-xs disabled:opacity-30"
+            >
+              Load More Works
+            </button>
           </div>
-
-          {/* Load More / Next Page Button */}
-          {currentPage < totalPages ? (
-            <button
-              onClick={handleNextPage}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-red-600/30 hover:-translate-y-0.5"
-            >
-              <span>Load Next Works</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setCurrentPage(1);
-                scrollToPortfolioTop();
-              }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 text-xs font-bold uppercase tracking-wider transition-all"
-            >
-              <RotateCcw className="w-4 h-4 text-red-500" />
-              <span>Back to First Page</span>
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* Expanded Multi-Media Gallery Lightbox Modal */}
-      {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-zinc-950/90 backdrop-blur-xl animate-fadeIn">
-          <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto glass-panel rounded-3xl border border-zinc-800 shadow-2xl p-6 sm:p-8 bg-zinc-950">
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedProject(null)}
-              className="absolute top-5 right-5 p-2.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all z-10"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Modal Header Title */}
-            <div className="mb-6">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                {selectedProject.title}
-              </h3>
-            </div>
-
-            {/* Media Gallery / Player Viewport */}
-            <div className="relative mb-6">
-              {selectedProject.videoUrl ? (
-                <div className="relative h-64 sm:h-96 w-full rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800">
+      {/* ── Lightbox Modal ── */}
+      {selected && (
+        <div className="lightbox-overlay" onClick={close}>
+          <div
+            className="lightbox-panel w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl bg-[#0E0E12] border border-white/8 flex flex-col lg:flex-row"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Image / Video pane */}
+            <div className="relative lg:w-3/5 bg-[#07070A] flex-shrink-0">
+              {selected.videoUrl ? (
+                <div className="aspect-video w-full">
                   <iframe
-                    src={selectedProject.videoUrl}
-                    title={selectedProject.title}
-                    className="w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    src={selected.videoUrl}
+                    title={selected.title}
+                    className="w-full h-full rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none"
                     allowFullScreen
                   />
                 </div>
-              ) : selectedProject.galleryImages && selectedProject.galleryImages.length > 0 ? (
-                <div>
-                  {/* Main Gallery Display */}
-                  <div className="relative h-64 sm:h-96 w-full rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800">
-                    <Image
-                      src={selectedProject.galleryImages[activeImageIndex]}
-                      alt={`${selectedProject.title} slide ${activeImageIndex + 1}`}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 900px"
-                      className="object-cover object-top transition-all duration-300"
-                    />
-
-                    {/* Carousel Navigation Arrows */}
-                    {selectedProject.galleryImages.length > 1 && (
-                      <>
-                        <button
-                          onClick={handlePrevImage}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-zinc-950/80 hover:bg-zinc-900 text-white border border-zinc-800 transition-all"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={handleNextImage}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-zinc-950/80 hover:bg-zinc-900 text-white border border-zinc-800 transition-all"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Thumbnail Row Switcher */}
-                  {selectedProject.galleryImages.length > 1 && (
-                    <div className="flex items-center gap-3 mt-3 overflow-x-auto pb-2">
-                      {selectedProject.galleryImages.map((img, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setActiveImageIndex(i)}
-                          className={`relative w-20 h-14 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
-                            activeImageIndex === i
-                              ? 'border-red-500 scale-105 shadow-md shadow-red-600/30'
-                              : 'border-zinc-800 opacity-60 hover:opacity-100'
-                          }`}
-                        >
-                          <Image src={img} alt={`thumb ${i}`} fill className="object-cover" />
-                        </button>
-                      ))}
+              ) : (
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src={selected.images[imgIndex]}
+                    alt={selected.title}
+                    fill
+                    className="object-cover rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none"
+                  />
+                  {/* Gallery nav */}
+                  {selected.images.length > 1 && (
+                    <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-3">
+                      <button onClick={() => setImgIndex((i) => Math.max(0, i - 1))} className="p-2 rounded-full bg-black/60 text-white hover:bg-[#E8192C] transition-colors">
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span className="text-xs font-mono text-white/70">{imgIndex + 1} / {selected.images.length}</span>
+                      <button onClick={() => setImgIndex((i) => Math.min(selected.images.length - 1, i + 1))} className="p-2 rounded-full bg-black/60 text-white hover:bg-[#E8192C] transition-colors">
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
                     </div>
                   )}
                 </div>
-              ) : null}
+              )}
             </div>
 
-            {/* Description & Deliverables */}
-            <div className="space-y-6">
-              <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                {selectedProject.longDescription}
-              </p>
+            {/* Details pane */}
+            <div className="flex-1 p-7 flex flex-col gap-5 overflow-y-auto">
+              {/* Close */}
+              <button onClick={close} className="self-end p-2 rounded-full hover:bg-white/10 text-[#6B6B74] hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
 
-              {/* Deliverables Grid */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-red-500" />
-                  <span>Key Deliverables & Specifications</span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {selectedProject.deliverables.map((item, i) => (
-                    <div
-                      key={i}
-                      className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 flex items-center gap-2"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[#E8192C] mb-2 block">{selected.category}</span>
+                <h3 className="text-xl font-black text-white leading-snug mb-3">{selected.title}</h3>
+                <p className="text-sm text-[#9999A6] leading-relaxed">{selected.description}</p>
               </div>
 
-              {/* Tools Used Badges */}
-              <div>
-                <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2.5">
-                  Design Tools & Pre-Press Software
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.tools.map((t) => (
-                    <span
-                      key={t}
-                      className="px-3 py-1 rounded-lg bg-zinc-900 text-red-400 text-xs font-mono border border-zinc-800"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* External Links */}
-              {selectedProject.websiteUrl && (
-                <div className="pt-4 border-t border-zinc-800 flex items-center gap-4">
-                  <a
-                    href={selectedProject.websiteUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all shadow-lg shadow-red-600/30"
-                  >
-                    <Globe className="w-4 h-4" />
-                    <span>Visit Live Website</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+              {selected.deliverables && (
+                <div>
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] mb-2">Deliverables</div>
+                  <div className="flex flex-wrap gap-2">
+                    {selected.deliverables.map((d) => (
+                      <span key={d} className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#E8192C]/10 border border-[#E8192C]/20 text-[#E8192C]">{d}</span>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              {selected.tools && (
+                <div>
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] mb-2">Tools Used</div>
+                  <div className="flex flex-wrap gap-2">
+                    {selected.tools.map((t) => (
+                      <span key={t} className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/5 text-[#9999A6]">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
+                {selected.videoUrl && (
+                  <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="btn-red justify-center">
+                    <Play className="w-4 h-4" />
+                    Watch Video Reel
+                  </a>
+                )}
+                {selected.websiteUrl && (
+                  <a href={selected.websiteUrl} target="_blank" rel="noreferrer" className="btn-outline justify-center">
+                    <ExternalLink className="w-4 h-4" />
+                    Visit Live Site
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>

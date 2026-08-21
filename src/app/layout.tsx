@@ -1,52 +1,45 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Playfair_Display } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  display: 'swap',
 });
 
 const playfair = Playfair_Display({
-  variable: '--font-serif',
+  variable: '--font-playfair',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Linoy Stephen | Senior Graphic Designer & Creative Director Dubai',
+  title: 'Linoy Stephen | Senior Graphic Designer — Dubai, UAE',
   description:
-    'Senior Graphic Designer & Web Designer in Dubai, UAE with 20+ years of experience in corporate marketing, brand guidelines, pharmaceutical packaging (Rx/OTC), exhibition booth design, video reels, and WordPress websites.',
+    '20+ years Senior Graphic Designer & Web Designer in Dubai, UAE. Expert in brand identity, pharmaceutical packaging (Rx/OTC), exhibition booth design, After Effects video reels, and WordPress web design. Open to new opportunities.',
   keywords: [
-    'Linoy Stephen',
     'Senior Graphic Designer Dubai',
-    'Creative Director Dubai',
-    'Web Designer Dubai',
+    'Brand Identity Designer UAE',
     'Pharmaceutical Packaging Designer',
-    'Brand Identity Guidelines',
-    'Exhibition Booth Designer Dubai',
-    'WHX 2026 CPHI Packaging',
-    'After Effects Video Editor',
-    'WordPress Developer Dubai',
+    'Exhibition Booth Design Dubai',
+    'Motion Graphics After Effects',
+    'WordPress Designer Dubai',
+    'Creative Director UAE',
+    'Linoy Stephen',
   ],
   authors: [{ name: 'Linoy Stephen' }],
+  openGraph: {
+    title: 'Linoy Stephen | Senior Graphic Designer — Dubai, UAE',
+    description: '20+ years of creative excellence across branding, packaging, exhibitions, video & web.',
+    type: 'website',
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark scroll-smooth`}
-    >
-      <body className="min-h-screen flex flex-col bg-[#030304] text-zinc-100 antialiased studio-canvas selection:bg-red-600 selection:text-white">
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="bg-[#07070A] text-[#F2F0EB] antialiased">
         {children}
       </body>
     </html>

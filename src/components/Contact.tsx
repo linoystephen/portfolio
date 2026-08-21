@@ -1,338 +1,147 @@
 'use client';
-
 import React, { useState } from 'react';
-import {
-  Mail,
-  Send,
-  MessageSquare,
-  MapPin,
-  CheckCircle,
-  AlertCircle,
-  Phone,
-  Globe,
-  Sparkles,
-} from 'lucide-react';
-import { linoyProfile } from '../data/portfolioData';
+import { Mail, Phone, MapPin, Globe, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { LinkedinIcon } from './SocialIcons';
 
+const encode = (data: Record<string, string>) =>
+  Object.keys(data)
+    .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+    .join('&');
+
 export const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    projectType: 'Brand & Corporate Identity',
-    message: '',
-  });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: 'Job Opportunity', message: '' });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const encode = (data: Record<string, string>) => {
-    return Object.keys(data)
-      .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-      .join('&');
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.name || !formData.email || !formData.message) {
-      setStatus('error');
-      setErrorMessage('Please fill out all required fields.');
-      return;
-    }
-
-    setStatus('submitting');
-    setErrorMessage('');
-
-    // Send payload to Netlify Forms static endpoint /__forms.html
+    if (!form.name || !form.email || !form.message) { setStatus('error'); return; }
+    setStatus('sending');
     fetch('/__forms.html', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encode({ 'form-name': 'contact', ...formData }),
+      body: encode({ 'form-name': 'contact', ...form }),
     })
-      .then(() => {
-        setStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          projectType: 'Brand & Corporate Identity',
-          message: '',
-        });
-      })
-      .catch(() => {
-        setStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          projectType: 'Brand & Corporate Identity',
-          message: '',
-        });
-      });
+      .then(() => { setStatus('sent'); setForm({ name: '', email: '', phone: '', subject: 'Job Opportunity', message: '' }); })
+      .catch(() => { setStatus('sent'); setForm({ name: '', email: '', phone: '', subject: 'Job Opportunity', message: '' }); });
   };
 
   return (
-    <section id="contact" className="relative py-24 bg-zinc-950/90 border-t border-zinc-900 overflow-hidden">
-      {/* Ambient Glow */}
-      <div className="ambient-glow-cyan bottom-10 -left-32 opacity-40" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Mail className="w-3.5 h-3.5" />
-            <span>Connect & Collaborate</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Let&apos;s Build <span className="gradient-text-red">Your Next Project</span>
+    <section id="contact" className="section-pad bg-[#07070A] border-t border-white/5">
+      <div className="container-xl">
+        {/* Header */}
+        <div className="text-center max-w-xl mx-auto mb-16">
+          <div className="section-label justify-center">Contact</div>
+          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+            Let&apos;s <span className="font-editorial italic font-normal text-[#E8192C]">Connect</span>
           </h2>
-          <p className="text-zinc-400 text-base sm:text-lg max-w-2xl">
-            Available for Senior Graphic Design leadership, pharmaceutical packaging design consultation, trade show booth branding, and corporate web projects in Dubai & international markets.
+          <p className="text-[#6B6B74] text-sm mt-4 leading-relaxed">
+            Open to Senior Graphic Designer roles, freelance projects, and creative partnerships in Dubai &amp; remote.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Direct Contact Info */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="glass-panel p-8 rounded-3xl border border-zinc-800 space-y-6 bg-zinc-950">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-red-500" />
-                <span>Direct Contact Details</span>
-              </h3>
-
-              <div className="space-y-4 pt-2">
-                {/* Phone Card */}
-                <a
-                  href={`tel:${linoyProfile.phone}`}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-red-500/40 hover:bg-zinc-900/90 transition-all group"
-                >
-                  <div className="p-3 rounded-xl bg-red-600/15 text-red-500 border border-red-500/30 group-hover:scale-110 transition-transform">
-                    <Phone className="w-5 h-5" />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+          {/* Left: Contact Cards */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            {[
+              { icon: Phone, label: 'Call / WhatsApp', value: '+971-552805458', href: 'tel:+971552805458' },
+              { icon: Mail, label: 'Email', value: 'linoystephen@gmail.com', href: 'mailto:linoystephen@gmail.com' },
+              { icon: Globe, label: 'Existing Portfolio', value: 'linoy.nanobirdtech.com', href: 'http://linoy.nanobirdtech.com' },
+              { icon: MapPin, label: 'Location', value: 'Dubai, UAE', href: null },
+            ].map(({ icon: Icon, label, value, href }) => {
+              const inner = (
+                <div className="card-glass rounded-2xl p-4 flex items-center gap-4 group">
+                  <div className="p-3 rounded-xl bg-[#E8192C]/10 border border-[#E8192C]/20 text-[#E8192C] shrink-0">
+                    <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-zinc-400">Call / WhatsApp</div>
-                    <div className="text-sm font-bold text-white group-hover:text-red-500 transition-colors font-mono">
-                      {linoyProfile.phone}
-                    </div>
-                  </div>
-                </a>
-
-                {/* Email Card */}
-                <a
-                  href={`mailto:${linoyProfile.email}`}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-red-500/40 hover:bg-zinc-900/90 transition-all group"
-                >
-                  <div className="p-3 rounded-xl bg-red-600/15 text-red-500 border border-red-500/30 group-hover:scale-110 transition-transform">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-zinc-400">Direct Email</div>
-                    <div className="text-sm font-bold text-white group-hover:text-red-500 transition-colors font-mono">
-                      {linoyProfile.email}
-                    </div>
-                  </div>
-                </a>
-
-                {/* Existing Portfolio Card */}
-                <a
-                  href={linoyProfile.existingPortfolioUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-red-500/40 hover:bg-zinc-900/90 transition-all group"
-                >
-                  <div className="p-3 rounded-xl bg-red-600/15 text-red-500 border border-red-500/30 group-hover:scale-110 transition-transform">
-                    <Globe className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-zinc-400">Existing Portfolio Site</div>
-                    <div className="text-sm font-bold text-white group-hover:text-red-500 transition-colors font-mono">
-                      linoy.nanobirdtech.com
-                    </div>
-                  </div>
-                </a>
-
-                {/* Location Card */}
-                <div className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
-                  <div className="p-3 rounded-xl bg-zinc-800 text-red-500 border border-zinc-700">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-zinc-400">Location</div>
-                    <div className="text-sm font-bold text-white">{linoyProfile.location}</div>
+                    <div className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74]">{label}</div>
+                    <div className="text-sm font-semibold text-white font-mono group-hover:text-[#E8192C] transition-colors">{value}</div>
                   </div>
                 </div>
-              </div>
+              );
+              return href ? <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">{inner}</a> : <div key={label}>{inner}</div>;
+            })}
 
-              {/* LinkedIn Button */}
-              <div className="pt-6 border-t border-zinc-800">
-                <a
-                  href={linoyProfile.linkedinUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white hover:text-red-400 hover:border-red-500/40 text-xs font-semibold uppercase tracking-wider transition-all"
-                >
-                  <LinkedinIcon className="w-4 h-4 text-zinc-300" />
-                  <span>Connect on LinkedIn</span>
-                </a>
+            {/* LinkedIn */}
+            <a href="https://linkedin.com/in/linoystephen" target="_blank" rel="noreferrer" className="card-glass rounded-2xl p-4 flex items-center gap-4 group">
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-[#9999A6] shrink-0">
+                <LinkedinIcon className="w-4 h-4" />
               </div>
-            </div>
+              <div>
+                <div className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74]">LinkedIn</div>
+                <div className="text-sm font-semibold text-white font-mono group-hover:text-[#E8192C] transition-colors">linkedin.com/in/linoystephen</div>
+              </div>
+            </a>
           </div>
 
-          {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="glass-panel p-8 rounded-3xl border border-zinc-800 bg-zinc-950">
-              <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-red-500" />
-                <span>Send Studio Inquiry</span>
-              </h3>
-
-              {status === 'success' ? (
-                <div className="p-8 rounded-2xl bg-red-600/10 border border-red-500/30 text-center space-y-4 animate-fadeIn">
-                  <div className="w-16 h-16 rounded-full bg-red-600/20 text-red-500 border border-red-500/40 flex items-center justify-center mx-auto">
-                    <CheckCircle className="w-8 h-8" />
-                  </div>
-                  <h4 className="text-xl font-bold text-white">Inquiry Received!</h4>
-                  <p className="text-zinc-300 text-sm max-w-md mx-auto">
-                    Thank you for reaching out. Your message has been sent directly to Linoy Stephen.
-                  </p>
-                  <button
-                    onClick={() => setStatus('idle')}
-                    className="mt-4 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all"
-                  >
-                    Send Another Message
-                  </button>
+          {/* Right: Form */}
+          <div className="lg:col-span-3 card-glass rounded-2xl p-8">
+            {status === 'sent' ? (
+              <div className="flex flex-col items-center justify-center h-full py-12 gap-4 text-center">
+                <div className="p-5 rounded-full bg-[#E8192C]/10 border border-[#E8192C]/30">
+                  <CheckCircle className="w-8 h-8 text-[#E8192C]" />
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {status === 'error' && (
-                    <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm flex items-center gap-3">
-                      <AlertCircle className="w-5 h-5 shrink-0" />
-                      <span>{errorMessage}</span>
-                    </div>
+                <h3 className="text-xl font-black text-white">Message Sent!</h3>
+                <p className="text-sm text-[#9999A6] max-w-xs">Thank you for reaching out. I'll get back to you very shortly.</p>
+                <button onClick={() => setStatus('idle')} className="btn-outline mt-2">Send Another</button>
+              </div>
+            ) : (
+              <form onSubmit={onSubmit} className="space-y-4">
+                <h3 className="text-lg font-black text-white mb-6">Send a Message</h3>
+
+                {status === 'error' && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    Please fill in all required fields.
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] block mb-1.5">Your Name *</label>
+                    <input name="name" value={form.name} onChange={onChange} required placeholder="Jane Smith" className="input-field" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] block mb-1.5">Your Email *</label>
+                    <input name="email" type="email" value={form.email} onChange={onChange} required placeholder="jane@company.com" className="input-field" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] block mb-1.5">Phone / WhatsApp</label>
+                  <input name="phone" value={form.phone} onChange={onChange} placeholder="+971 500 000 000" className="input-field" />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] block mb-1.5">Enquiry Type</label>
+                  <select name="subject" value={form.subject} onChange={onChange} className="input-field">
+                    <option value="Job Opportunity">Job Opportunity</option>
+                    <option value="Freelance Project">Freelance Project</option>
+                    <option value="Brand Identity Design">Brand Identity Design</option>
+                    <option value="Pharma Packaging">Pharma Packaging</option>
+                    <option value="Exhibition Design">Exhibition Design</option>
+                    <option value="Web Design">Web Design</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-bold tracking-widest uppercase text-[#6B6B74] block mb-1.5">Message *</label>
+                  <textarea name="message" value={form.message} onChange={onChange} required rows={5} placeholder="Tell me about the opportunity or project…" className="input-field resize-none" />
+                </div>
+
+                <button type="submit" disabled={status === 'sending'} className="btn-red w-full disabled:opacity-50">
+                  {status === 'sending' ? (
+                    <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending…</>
+                  ) : (
+                    <><Send className="w-4 h-4" />Send Message</>
                   )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {/* Name */}
-                    <div>
-                      <label htmlFor="name" className="block text-xs font-semibold text-zinc-300 mb-2">
-                        Your Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="John Smith"
-                        required
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label htmlFor="email" className="block text-xs font-semibold text-zinc-300 mb-2">
-                        Your Email <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="john@company.com"
-                        required
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone */}
-                  <div>
-                    <label htmlFor="phone" className="block text-xs font-semibold text-zinc-300 mb-2">
-                      Your Phone / WhatsApp
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+971-500000000"
-                      className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
-                    />
-                  </div>
-
-                  {/* Service Select */}
-                  <div>
-                    <label htmlFor="projectType" className="block text-xs font-semibold text-zinc-300 mb-2">
-                      Project Service Required
-                    </label>
-                    <select
-                      id="projectType"
-                      name="projectType"
-                      value={formData.projectType}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
-                    >
-                      <option value="Brand & Corporate Identity">Brand & Corporate Identity Systems</option>
-                      <option value="Pharma Packaging & Regulatory">Pharma Packaging & Regulatory (Rx/OTC)</option>
-                      <option value="Exhibition Booth & Event Graphics">Exhibition Booth & Event Collateral</option>
-                      <option value="Corporate Video & Motion Graphics">Corporate Video Editing / Motion Reel</option>
-                      <option value="Web & UI/UX Design">WordPress / Web Design & SEO</option>
-                      <option value="Full-Time Creative Role">Senior Graphic Designer / Web Role</option>
-                    </select>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-xs font-semibold text-zinc-300 mb-2">
-                      Project Overview / Message <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Hi Linoy, I'd like to discuss a brand identity and packaging project..."
-                      required
-                      className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all resize-none"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={status === 'submitting'}
-                    className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-base transition-all shadow-xl shadow-red-600/30 disabled:opacity-50"
-                  >
-                    {status === 'submitting' ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Sending Message...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5" />
-                        <span>Send Message</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

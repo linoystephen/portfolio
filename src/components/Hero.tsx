@@ -1,181 +1,114 @@
 'use client';
-
 import React from 'react';
 import Image from 'next/image';
-import {
-  ArrowDown,
-  ArrowUpRight,
-  Sparkles,
-  Phone,
-  Mail,
-  MapPin,
-  Award,
-} from 'lucide-react';
-import { linoyProfile } from '../data/portfolioData';
+import { ArrowDown, Download, Phone, Mail, MapPin } from 'lucide-react';
 import { LinkedinIcon } from './SocialIcons';
 
-export const Hero: React.FC = () => {
-  const clientsList = [
-    'Shalina Healthcare',
-    'Neopharma LLC',
-    'Shell Oman',
-    'Petroleum Development Oman',
-    'Port of Duqm',
-    'Royal Oman Police',
-    'Nanobird Tech',
-    'Mphasis',
-  ];
+const stats = [
+  { value: '20+', label: 'Years Experience' },
+  { value: '100+', label: 'Brands & Clients' },
+  { value: '8+', label: 'Years in UAE/GCC' },
+];
 
-  return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex flex-col justify-between pt-32 pb-16 overflow-hidden bg-[#030304]"
-    >
-      {/* Ambient Red Studio Lighting */}
-      <div className="ambient-glow-red top-1/4 -left-32 animate-pulse-glow" />
-      <div className="ambient-glow-red bottom-1/4 -right-32 animate-pulse-glow" style={{ animationDelay: '3s' }} />
+export const Hero: React.FC = () => (
+  <section id="hero" className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden bg-[#07070A]">
+    {/* Ambient glows */}
+    <div className="ambient -top-40 -left-40 opacity-60" />
+    <div className="ambient -bottom-40 -right-40 opacity-40" style={{ width: 500, height: 500 }} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Editorial Headline & Bio */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Status Pill Badge */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 backdrop-blur-md mb-8 shadow-xl">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-              </span>
-              <span className="text-xs font-mono tracking-widest text-zinc-300 uppercase flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-red-500" />
-                <span>{linoyProfile.location} • 20+ Yrs Exp</span>
-              </span>
-            </div>
+    <div className="container-xl relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-            {/* Main Name & Title (Editorial Style) */}
-            <div className="space-y-3 mb-8">
-              <span className="text-xs font-mono text-red-500 tracking-[0.3em] uppercase block font-semibold">
-                SENIOR GRAPHIC DESIGNER & WEB DESIGNER
-              </span>
-              <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase leading-[0.95]">
-                LINOY <br />
-                <span className="editorial-title font-serif italic text-red-500 lowercase font-normal">
-                  Stephen.
-                </span>
-              </h1>
-            </div>
-
-            {/* Summary Quote */}
-            <p className="text-base sm:text-xl text-zinc-400 max-w-2xl leading-relaxed font-light mb-10 border-l-2 border-red-600 pl-5 py-1">
-              {linoyProfile.summary}
-            </p>
-
-            {/* Action CTAs */}
-            <div className="flex flex-wrap items-center gap-4 mb-12 w-full sm:w-auto">
-              <a
-                href="#projects"
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest shadow-xl shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-0.5 transition-all w-full sm:w-auto"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Explore Works</span>
-              </a>
-
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-white border border-zinc-800 font-semibold text-xs uppercase tracking-widest transition-all hover:-translate-y-0.5 w-full sm:w-auto"
-              >
-                <span>Get In Touch</span>
-                <ArrowUpRight className="w-4 h-4 text-red-500" />
-              </a>
-            </div>
-
-            {/* Contact Strip */}
-            <div className="flex flex-wrap items-center gap-5 pt-6 border-t border-zinc-800/80 w-full text-xs text-zinc-400 font-mono">
-              <a
-                href={`tel:${linoyProfile.phone}`}
-                className="flex items-center gap-2 hover:text-red-500 transition-colors"
-              >
-                <Phone className="w-3.5 h-3.5 text-red-500" />
-                <span>{linoyProfile.phone}</span>
-              </a>
-              <span className="text-zinc-700">•</span>
-              <a
-                href={`mailto:${linoyProfile.email}`}
-                className="flex items-center gap-2 hover:text-red-500 transition-colors"
-              >
-                <Mail className="w-3.5 h-3.5 text-red-500" />
-                <span>{linoyProfile.email}</span>
-              </a>
-              <span className="text-zinc-700">•</span>
-              <a
-                href={linoyProfile.linkedinUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 hover:text-red-500 transition-colors"
-              >
-                <LinkedinIcon className="w-3.5 h-3.5 text-zinc-400" />
-                <span>LinkedIn</span>
-              </a>
-            </div>
+        {/* ── LEFT: Text ── */}
+        <div className="flex flex-col">
+          {/* Available badge */}
+          <div className="pill-available mb-8 self-start">
+            <span className="pill-dot" />
+            Open to Work · Dubai, UAE
           </div>
 
-          {/* Right Column: High-Impact Editorial Studio Frame Display */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Crimson Accent Frame Glow */}
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-red-600 via-rose-600 to-red-800 opacity-30 blur-2xl animate-pulse-glow" />
+          {/* Headline */}
+          <h1 className="text-[clamp(2.8rem,7vw,5.5rem)] font-black leading-[0.95] tracking-tight text-white mb-6 uppercase">
+            Senior<br />
+            <span className="font-editorial italic font-normal text-[#E8192C] normal-case">
+              Graphic
+            </span>{' '}
+            &amp;<br />
+            Web Designer
+          </h1>
 
-              {/* Designer Portrait Container */}
-              <div className="relative glass-panel-luxury rounded-3xl overflow-hidden shadow-2xl border border-zinc-800 bg-[#070709]">
-                <div className="relative h-[480px] sm:h-[560px] w-full overflow-hidden">
-                  <Image
-                    src="/images/brand-1.png"
-                    alt="Linoy Stephen - Senior Graphic Designer"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 500px"
-                    className="object-cover object-center filter grayscale contrast-110 hover:grayscale-0 transition-all duration-700 hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030304] via-transparent to-transparent" />
+          {/* Tagline */}
+          <p className="text-[#9999A6] text-base sm:text-lg leading-relaxed max-w-xl mb-8 border-l-2 border-[#E8192C] pl-5">
+            20+ years crafting bold brand identities, regulatory pharma packaging,
+            world-class exhibition booths, motion reels, and WordPress websites
+            for leading corporations across UAE, GCC &amp; Africa.
+          </p>
 
-                  {/* Corner Accent Box */}
-                  <div className="absolute top-5 left-5 px-4 py-2 rounded-xl bg-zinc-950/90 backdrop-blur-md border border-zinc-800 text-xs font-mono text-white flex items-center gap-2">
-                    <Award className="w-4 h-4 text-red-500" />
-                    <span>Creative Leadership</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 mb-10">
+            <a href="#works" className="btn-red">View My Works</a>
+            <a href="/cv/linoy-stephen-cv.pdf" download className="btn-outline">
+              <Download className="w-4 h-4" />
+              Download CV
+            </a>
+          </div>
+
+          {/* Quick contact strip */}
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-mono text-[#6B6B74]">
+            <a href="tel:+971552805458" className="flex items-center gap-1.5 hover:text-[#E8192C] transition-colors">
+              <Phone className="w-3 h-3 text-[#E8192C]" />+971-552805458
+            </a>
+            <a href="mailto:linoystephen@gmail.com" className="flex items-center gap-1.5 hover:text-[#E8192C] transition-colors">
+              <Mail className="w-3 h-3 text-[#E8192C]" />linoystephen@gmail.com
+            </a>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-[#E8192C]" />Dubai, UAE
+            </span>
+            <a href="https://linkedin.com/in/linoystephen" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-[#E8192C] transition-colors">
+              <LinkedinIcon className="w-3 h-3 text-[#6B6B74]" />LinkedIn
+            </a>
           </div>
         </div>
 
-        {/* Client Brand Marquee Ribbon */}
-        <div className="mt-16 pt-8 border-t border-zinc-900">
-          <div className="text-[10px] font-mono tracking-[0.25em] text-zinc-500 uppercase text-center mb-6">
-            TRUSTED BY LEADING CORPORATIONS & PHARMA LEADERS ACROSS GCC & AFRICA
+        {/* ── RIGHT: Photo + Stats ── */}
+        <div className="relative flex flex-col items-center lg:items-end gap-6">
+          {/* Photo Frame */}
+          <div className="relative w-full max-w-sm">
+            {/* Glow ring */}
+            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-[#E8192C]/40 via-transparent to-transparent blur-2xl opacity-60" />
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#0E0E12]">
+              <Image
+                src="/images/portrait.png"
+                alt="Linoy Stephen - Senior Graphic Designer Dubai"
+                width={480}
+                height={560}
+                priority
+                className="object-cover w-full grayscale hover:grayscale-0 transition-all duration-700"
+              />
+              {/* Gradient fade */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#07070A]/80 via-transparent to-transparent pointer-events-none" />
+            </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 opacity-70 hover:opacity-100 transition-opacity">
-            {clientsList.map((client) => (
-              <span
-                key={client}
-                className="px-4 py-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80 text-xs font-mono text-zinc-300"
-              >
-                {client}
-              </span>
+
+          {/* Stat chips */}
+          <div className="flex gap-3 flex-wrap justify-center lg:justify-end w-full max-w-sm">
+            {stats.map((s) => (
+              <div key={s.label} className="card-glass rounded-xl px-5 py-3 text-center flex-1 min-w-[90px]">
+                <div className="text-2xl font-black text-white">{s.value}</div>
+                <div className="text-[10px] font-semibold tracking-widest text-[#6B6B74] uppercase">{s.label}</div>
+              </div>
             ))}
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="mt-12 text-center">
-          <a
-            href="#projects"
-            className="inline-flex flex-col items-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-500 hover:text-red-500 transition-colors"
-          >
-            <span>Scroll Down</span>
-            <ArrowDown className="w-4 h-4 animate-bounce text-red-500" />
-          </a>
-        </div>
       </div>
-    </section>
-  );
-};
+
+      {/* Scroll cue */}
+      <div className="mt-16 flex justify-center">
+        <a href="#services" className="flex flex-col items-center gap-2 text-[#6B6B74] hover:text-[#E8192C] transition-colors text-[10px] tracking-widest uppercase font-semibold">
+          <span>Scroll</span>
+          <ArrowDown className="w-4 h-4 animate-bounce" />
+        </a>
+      </div>
+    </div>
+  </section>
+);
