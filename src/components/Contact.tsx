@@ -85,7 +85,7 @@ export const Contact: React.FC = () => {
                   <CheckCircle className="w-8 h-8 text-[#E8192C]" />
                 </div>
                 <h3 className="text-xl font-black text-white">Message Sent!</h3>
-                <p className="text-sm text-[#9999A6] max-w-xs">Thank you for reaching out. I'll get back to you very shortly.</p>
+                <p className="text-sm text-[#9999A6] max-w-xs">Thank you for reaching out. I&apos;ll get back to you very shortly.</p>
                 <button onClick={() => setStatus('idle')} className="btn-outline mt-2">Send Another</button>
               </div>
             ) : (

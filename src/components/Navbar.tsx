@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Download } from 'lucide-react';
 
 const navLinks = [
-  { href: '#services', label: 'Services' },
-  { href: '#works', label: 'Works' },
-  { href: '#resume', label: 'Resume' },
   { href: '#about', label: 'About' },
+  { href: '#works', label: 'Works' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#services', label: 'Services' },
+  { href: '#resume', label: 'Resume' },
   { href: '#contact', label: 'Contact' },
 ];
 

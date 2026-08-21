@@ -12,6 +12,13 @@ export const projectType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: { source: 'title', maxLength: 96 },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'client',
       title: 'Client Name / Company',
       type: 'string',
@@ -47,12 +54,19 @@ export const projectType = defineType({
       title: 'Main Cover Image',
       type: 'image',
       options: { hotspot: true },
+      fields: [{ name: 'alt', title: 'Alternative Text', type: 'string' }],
     }),
     defineField({
       name: 'galleryImages',
       title: 'Multi-Image Gallery (Slideshow)',
       type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
+      of: [{ type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', title: 'Alternative Text', type: 'string' }] }],
+    }),
+    defineField({
+      name: 'videoFile',
+      title: 'Uploaded Video (MP4/WebM)',
+      type: 'file',
+      options: { accept: 'video/mp4,video/webm' },
     }),
     defineField({
       name: 'videoUrl',
@@ -81,5 +95,8 @@ export const projectType = defineType({
       title: 'Project Year',
       type: 'string',
     }),
+    defineField({ name: 'featured', title: 'Featured Project', type: 'boolean', initialValue: false }),
+    defineField({ name: 'published', title: 'Published on Website', type: 'boolean', initialValue: true }),
+    defineField({ name: 'order', title: 'Display Order', type: 'number', validation: (Rule) => Rule.min(1) }),
   ],
 });

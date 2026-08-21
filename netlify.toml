@@ -3,3 +3,5 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  NEXT_PUBLIC_SANITY_PROJECT_ID = "nan7azvw"
+  NEXT_PUBLIC_SANITY_DATASET = "production"

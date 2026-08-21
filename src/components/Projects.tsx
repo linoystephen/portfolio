@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, ExternalLink, Play } from 'lucide-react';
+import { client } from '../sanity/client';
 
 interface Project {
   title: string;
@@ -9,12 +10,18 @@ interface Project {
   category: string;
   images: string[];
   videoUrl?: string;
+  videoFile?: string;
   websiteUrl?: string;
   deliverables?: string[];
   tools?: string[];
 }
 
-const projects: Project[] = [
+interface SanityProject extends Omit<Project, 'images'> {
+  cover?: string;
+  gallery?: string[];
+}
+
+const fallbackProjects: Project[] = [
   {
     title: 'Shalina Healthcare — Brand Identity System',
     description: 'Comprehensive brand identity guidelines, corporate stationery, and marketing collateral for one of Africa\'s leading pharmaceutical companies with presence in 20+ African countries.',
@@ -94,12 +101,28 @@ const projects: Project[] = [
 const ITEMS_PER_PAGE = 6;
 
 export const Projects: React.FC = () => {
-  const [page, setPage] = useState(1);
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [selected, setSelected] = useState<Project | null>(null);
   const [imgIndex, setImgIndex] = useState(0);
 
-  const total = Math.ceil(projects.length / ITEMS_PER_PAGE);
-  const visible = projects.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  useEffect(() => {
+    client.fetch<SanityProject[]>(`*[_type == "project" && published != false] | order(order asc, _createdAt desc){
+      title, description, category,
+      "cover": coverImage.asset->url, "gallery": galleryImages[].asset->url,
+      videoUrl, "videoFile": videoFile.asset->url, websiteUrl, deliverables, tools
+    }`).then((items) => {
+      const mapped = items.map(({ cover, gallery = [], ...item }) => ({
+        ...item,
+        images: [cover, ...gallery].filter((url): url is string => Boolean(url)),
+      })).filter((item) => item.images.length);
+      if (mapped.length) setProjects(mapped);
+    }).catch(() => {
+      // Keep curated work visible when Sanity is empty or temporarily unavailable.
+    });
+  }, []);
+
+  const visible = projects.slice(0, visibleCount);
 
   const open = (p: Project) => { setSelected(p); setImgIndex(0); };
   const close = () => setSelected(null);
@@ -147,28 +170,16 @@ export const Projects: React.FC = () => {
           ))}
         </div>
 
-        {/* Pagination */}
-        {total > 1 && (
-          <div className="flex items-center justify-center gap-4 mt-12">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="btn-outline py-2.5 px-5 text-xs disabled:opacity-30"
-            >
-              Previous Works
+        <div className="flex items-center justify-center gap-4 mt-12">
+          <span className="text-[#6B6B74] text-xs font-mono">
+            Showing {visible.length} of {projects.length} works
+          </span>
+          {visibleCount < projects.length && (
+            <button onClick={() => setVisibleCount((count) => count + ITEMS_PER_PAGE)} className="btn-red py-2.5 px-5 text-xs">
+              View More Works
             </button>
-            <span className="text-[#6B6B74] text-xs font-mono">
-              {page} / {total}
-            </span>
-            <button
-              onClick={() => setPage((p) => Math.min(total, p + 1))}
-              disabled={page === total}
-              className="btn-red py-2.5 px-5 text-xs disabled:opacity-30"
-            >
-              Load More Works
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* ── Lightbox Modal ── */}
@@ -180,7 +191,11 @@ export const Projects: React.FC = () => {
           >
             {/* Image / Video pane */}
             <div className="relative lg:w-3/5 bg-[#07070A] flex-shrink-0">
-              {selected.videoUrl ? (
+              {selected.videoFile ? (
+                <div className="aspect-video w-full">
+                  <video src={selected.videoFile} controls className="w-full h-full object-contain" />
+                </div>
+              ) : selected.videoUrl ? (
                 <div className="aspect-video w-full">
                   <iframe
                     src={selected.videoUrl}
@@ -249,8 +264,8 @@ export const Projects: React.FC = () => {
               )}
 
               <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
-                {selected.videoUrl && (
-                  <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="btn-red justify-center">
+                {(selected.videoUrl || selected.videoFile) && (
+                  <a href={selected.videoUrl || selected.videoFile} target="_blank" rel="noreferrer" className="btn-red justify-center">
                     <Play className="w-4 h-4" />
                     Watch Video Reel
                   </a>

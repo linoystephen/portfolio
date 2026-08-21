@@ -36,7 +36,7 @@ export const ExperienceTimeline: React.FC = () => {
               <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-zinc-800/90 group-hover:border-zinc-700 transition-all shadow-xl bg-zinc-950">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-red-500 transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-bold text-red-500 group-hover:text-red-400 transition-colors">
                       {exp.role}
                     </h3>
                     <div className="text-base font-semibold text-red-400 mt-0.5">
