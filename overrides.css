@@ -48,3 +48,10 @@
 .case-thumb.active{border-color:var(--blue);opacity:1}.case-thumb img{width:100%;height:100%;object-fit:cover}.thumb-play{display:grid;place-items:center;width:100%;height:100%;background:var(--ink);color:white;font-size:15px}
 .slide-arrow{position:absolute;top:calc(31vh - 10px);z-index:2;width:42px;height:42px;border:0;background:rgba(255,255,255,.92);color:var(--ink);font-size:18px;cursor:pointer}.slide-prev{left:24px}.slide-next{right:24px}.slide-count{position:absolute;right:18px;bottom:24px;color:#666;font-size:10px;font-weight:700;letter-spacing:.12em}
 @media(max-width:700px){.case-stage{height:45vh;min-height:280px}.case-thumb{flex-basis:70px;width:70px;height:50px}.slide-arrow{top:calc(22.5vh - 6px)}.slide-count{display:none}}
+
+/* Navigation and contact interaction states */
+.header nav a,.top-cta,.footer-contact .lime{transition:background-color .2s ease,color .2s ease,border-color .2s ease}
+.header nav a:hover,.header nav a:focus-visible{color:var(--blue)}
+.top-cta:hover,.top-cta:focus-visible{background:var(--ink);border-color:var(--ink);color:white}
+.footer-contact .lime{background:white;color:var(--ink);border:1px solid white}
+.footer-contact .lime:hover,.footer-contact .lime:focus-visible{background:#c92a2a;color:white;border-color:#c92a2a}
