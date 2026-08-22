@@ -20,8 +20,17 @@ async function loadProjects(){
   }catch(e){console.warn('Sanity content unavailable; showing local portfolio content.',e)}
 }
 function renderProjects(){const start=projectPage*PAGE_SIZE;const projects=allProjects.slice(start,start+PAGE_SIZE);projectsRoot.innerHTML=projects.map((p,i)=>{const image=p.media?.find(m=>m.type==='image');return `<article class="project" data-project="${esc(p.id)}" tabindex="0" role="button" aria-label="View ${esc(p.title)} project"><div class="media">${image?`<img src="${esc(image.src)}" alt="${esc(image.alt)}">`:''}<span class="project-category">${esc(p.category)}</span></div><div class="project-copy"><b>${String(start+i+1).padStart(2,'0')}</b><div><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div><button class="project-open">View more ↗</button></div></article>`}).join('');projectsRoot.querySelectorAll('[data-project]').forEach((el,i)=>{const open=()=>openProject(projects[i]);el.onclick=open;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}});const next=document.querySelector('#loadMoreProjects'),previous=document.querySelector('#previousProjects'),count=document.querySelector('#projectCount');const end=Math.min(start+projects.length,allProjects.length);if(count)count.textContent=`Projects ${start+1}–${end} of ${allProjects.length}`;if(previous)previous.hidden=projectPage===0;if(next)next.hidden=end>=allProjects.length}
-document.querySelector('#loadMoreProjects')?.addEventListener('click',()=>{projectPage+=1;renderProjects()});
-document.querySelector('#previousProjects')?.addEventListener('click',()=>{projectPage=Math.max(0,projectPage-1);renderProjects()});
+const changeProjectPage=nextPage=>{
+  projectPage=nextPage;
+  renderProjects();
+  requestAnimationFrame(()=>{
+    const headerHeight=document.querySelector('.header')?.offsetHeight||0;
+    const projectTop=projectsRoot.getBoundingClientRect().top+window.scrollY-headerHeight-12;
+    window.scrollTo({top:projectTop,behavior:'smooth'});
+  });
+};
+document.querySelector('#loadMoreProjects')?.addEventListener('click',()=>changeProjectPage(projectPage+1));
+document.querySelector('#previousProjects')?.addEventListener('click',()=>changeProjectPage(Math.max(0,projectPage-1)));
 function videoEmbed(url){if(!url)return'';let src=url;if(/youtu\.be|youtube\.com/.test(url)){const id=url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/)?.[1];if(id)src=`https://www.youtube.com/embed/${id}`}else if(/vimeo\.com/.test(url)){const id=url.match(/vimeo\.com\/(\d+)/)?.[1];if(id)src=`https://player.vimeo.com/video/${id}`}return `<iframe src="${esc(src)}" title="Project video" allow="autoplay; fullscreen" allowfullscreen></iframe>`}
 function openProject(p){
   let modal=document.querySelector('#projectModal');
