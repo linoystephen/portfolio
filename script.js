@@ -49,5 +49,11 @@ function openProject(p){
   if(media.length)show(0);
   modal.showModal();
 }
+const rolesToggle=document.querySelector('#rolesToggle'),rolesMore=document.querySelector('#rolesMore');
+rolesToggle?.addEventListener('click',()=>{
+  const collapsed=rolesMore.classList.toggle('collapsed');
+  rolesToggle.textContent=collapsed?'Show earlier roles ↓':'Show fewer roles ↑';
+  rolesToggle.setAttribute('aria-expanded',String(!collapsed));
+});
 loadProjects();
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
