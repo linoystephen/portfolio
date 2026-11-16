@@ -37,6 +37,7 @@ function openProject(p){
   if(!modal){modal=document.createElement('dialog');modal.id='projectModal';document.body.appendChild(modal)}
   const media=[...(p.media||[])];
   if(p.videoUrl)media.push({type:'embed',src:p.videoUrl,alt:'Project video'});
+  (p.videoUrls||[]).forEach(url=>{if(url)media.push({type:'embed',src:url,alt:'Project video'})});
   const services=(p.services||[]).join?.(', ')||p.services||'';
   const thumb=m=>m.type==='image'?`<img src="${esc(m.src)}" alt="">`:`<span class="thumb-play">▶</span>`;
   modal.innerHTML=`<button class="modal-close" aria-label="Close">×</button><section class="case-viewer"><div class="case-stage" aria-live="polite"></div>${media.length>1?`<button class="slide-arrow slide-prev" aria-label="Previous media">←</button><button class="slide-arrow slide-next" aria-label="Next media">→</button>`:''}<div class="case-thumbs">${media.map((m,i)=>`<button class="case-thumb${i===0?' active':''}" data-slide="${i}" aria-label="Show ${m.type==='image'?'image':'video'} ${i+1}">${thumb(m)}</button>`).join('')}</div><span class="slide-count"></span></section><header><span>${esc(p.category)} · ${esc(p.year)}</span><h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p></header><div class="case-meta"><div><b>Client</b><span>${esc(p.client||'Selected project')}</span></div><div><b>Services</b><span>${esc(services)}</span></div>${p.websiteUrl?`<a href="${esc(p.websiteUrl)}" target="_blank" rel="noopener">Visit website ↗</a>`:''}</div><div class="case-copy"><p>${esc(p.description)}</p></div>`;

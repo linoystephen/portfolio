@@ -12,7 +12,8 @@ export default defineType({name:'project',title:'Project',type:'document',fields
   defineField({name:'published',title:'Published on website',type:'boolean',initialValue:true}),
   defineField({name:'order',title:'Display order',type:'number',validation:R=>R.min(1)}),
   defineField({name:'websiteUrl',title:'Live website link',type:'url'}),
-  defineField({name:'videoUrl',title:'YouTube or Vimeo link',type:'url'}),
+  defineField({name:'videoUrl',title:'YouTube or Vimeo link (legacy, single)',description:'Older single-video field, kept for existing projects. Use "Video links" below to add videos going forward — you can add as many as you like there.',type:'url'}),
+  defineField({name:'videoUrls',title:'Video links',description:'Add one or more YouTube or Vimeo links. Each one appears as a playable item in the project gallery.',type:'array',of:[defineArrayMember({type:'url'})]}),
   defineField({name:'media',title:'Project media',description:'Place the strongest cover image first. Add multiple images or uploaded MP4/WebM video.',type:'array',of:[
     defineArrayMember({type:'image',options:{hotspot:true},fields:[defineField({name:'alt',title:'Alternative text',type:'string',validation:R=>R.required()})]}),
     defineArrayMember({type:'file',options:{accept:'video/mp4,video/webm'},fields:[defineField({name:'caption',title:'Caption',type:'string'})]})
