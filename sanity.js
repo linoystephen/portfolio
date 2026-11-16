@@ -17,6 +17,7 @@ export const imageUrl=source=>builder.image(source).auto('format').fit('max').ur
 export const projectsQuery=`*[_type == "project" && published == true] | order(order asc){
   _id, title, "id": slug.current, category, summary, description, year, client,
   services, featured, published, order, websiteUrl, videoUrl, videoUrls,
+  "coverImage": coverImage.asset, "coverImageAlt": coverImage.alt,
   "media": media[]{
     _key, _type, alt,
     _type == "image" => {asset},

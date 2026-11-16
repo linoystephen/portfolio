@@ -11,6 +11,7 @@ export default defineType({name:'project',title:'Project',type:'document',fields
   defineField({name:'featured',title:'Featured project',type:'boolean',initialValue:false}),
   defineField({name:'published',title:'Published on website',type:'boolean',initialValue:true}),
   defineField({name:'order',title:'Display order',type:'number',validation:R=>R.min(1)}),
+  defineField({name:'coverImage',title:'Cover image (grid thumbnail)',description:'Shown as the project\'s thumbnail in the main "Selected work" grid. If left empty, the first image in Project media below is used instead.',type:'image',options:{hotspot:true},fields:[defineField({name:'alt',title:'Alternative text',type:'string'})]}),
   defineField({name:'websiteUrl',title:'Live website link',type:'url'}),
   defineField({name:'videoUrl',title:'YouTube or Vimeo link (legacy, single)',description:'Older single-video field, kept for existing projects. Use "Video links" below to add videos going forward — you can add as many as you like there.',type:'url'}),
   defineField({name:'videoUrls',title:'Video links',description:'Add one or more YouTube or Vimeo links. Each one appears as a playable item in the project gallery.',type:'array',of:[defineArrayMember({type:'url'})]}),
@@ -18,4 +19,4 @@ export default defineType({name:'project',title:'Project',type:'document',fields
     defineArrayMember({type:'image',options:{hotspot:true},fields:[defineField({name:'alt',title:'Alternative text',type:'string',validation:R=>R.required()})]}),
     defineArrayMember({type:'file',options:{accept:'video/mp4,video/webm'},fields:[defineField({name:'caption',title:'Caption',type:'string'})]})
   ],validation:R=>R.min(1)}),
-],preview:{select:{title:'title',subtitle:'category',media:'media.0'}}})
+],preview:{select:{title:'title',subtitle:'category',cover:'coverImage',fallback:'media.0'},prepare:({title,subtitle,cover,fallback})=>({title,subtitle,media:cover||fallback})}})
