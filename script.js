@@ -7,7 +7,8 @@ const aboutSection=document.querySelector('#about'),workSection=document.querySe
 const PAGE_SIZE=6;
 let allProjects=[],projectPage=0;
 const normalizeMedia=m=>(m||[]).map(x=>x._type==='image'?{type:'image',src:imageUrl(x.asset),alt:x.alt||''}:{type:(x.mime||'').startsWith('video/')?'video':'file',src:x.src,alt:x.alt||''});
-const resumeDownloadName=originalName=>{const extension=String(originalName||'').match(/\.[a-z0-9]+$/i)?.[0]||'.pdf';const monthYear=new Intl.DateTimeFormat('en',{month:'long',year:'numeric'}).format(new Date());return `Linoy Stephen Sr Designer CV ${monthYear}${extension}`};
+const downloadName=(label,originalName)=>{const extension=String(originalName||'').match(/\.[a-z0-9]+$/i)?.[0]||'.pdf';const monthYear=new Intl.DateTimeFormat('en',{month:'long',year:'numeric'}).format(new Date());return `Linoy Stephen ${label} ${monthYear}${extension}`};
+const wireDownloadLink=(selector,url,originalName,label)=>{if(!url)return;const link=document.querySelector(selector);if(!link)return;const filename=downloadName(label,originalName);const separator=url.includes('?')?'&':'?';link.href=`${url}${separator}dl=${encodeURIComponent(filename)}`;link.download=filename;link.hidden=false};
 async function loadProjects(){
   allProjects=fallbackProjects.filter(p=>p.published!==false);
   renderProjects();
@@ -16,7 +17,8 @@ async function loadProjects(){
     const projects=(await client.fetch(projectsQuery)).map(p=>({...p,media:normalizeMedia(p.media),coverSrc:p.coverImage?imageUrl(p.coverImage):null,coverAlt:p.coverImageAlt||''}));
     if(projects.length){allProjects=projects;projectPage=0;renderProjects()}
     const settings=await client.fetch(settingsQuery);
-    if(settings?.resumeUrl){const link=document.querySelector('#resumeLink');const filename=resumeDownloadName(settings.resumeName);const separator=settings.resumeUrl.includes('?')?'&':'?';link.href=`${settings.resumeUrl}${separator}dl=${encodeURIComponent(filename)}`;link.download=filename}
+    wireDownloadLink('#resumeLink',settings?.resumeUrl,settings?.resumeName,'Sr Designer CV');
+    wireDownloadLink('#portfolioLink',settings?.portfolioUrl,settings?.portfolioName,'Portfolio');
   }catch(e){console.warn('Sanity content unavailable; showing local portfolio content.',e)}
 }
 function renderProjects(){const start=projectPage*PAGE_SIZE;const projects=allProjects.slice(start,start+PAGE_SIZE);projectsRoot.innerHTML=projects.map((p,i)=>{const fallbackImage=p.media?.find(m=>m.type==='image');const coverSrc=p.coverSrc||fallbackImage?.src;const coverAlt=p.coverSrc?(p.coverAlt||p.title):fallbackImage?.alt;return `<article class="project" data-project="${esc(p.id)}" tabindex="0" role="button" aria-label="View ${esc(p.title)} project"><div class="media">${coverSrc?`<img src="${esc(coverSrc)}" alt="${esc(coverAlt||'')}">`:''}<span class="project-category">${esc(p.category)}</span></div><div class="project-copy"><b>${String(start+i+1).padStart(2,'0')}</b><div><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div><button class="project-open">View more ↗</button></div></article>`}).join('');projectsRoot.querySelectorAll('[data-project]').forEach((el,i)=>{const open=()=>openProject(projects[i]);el.onclick=open;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}});const next=document.querySelector('#loadMoreProjects'),previous=document.querySelector('#previousProjects'),count=document.querySelector('#projectCount');const end=Math.min(start+projects.length,allProjects.length);if(count)count.textContent=`Projects ${start+1}–${end} of ${allProjects.length}`;if(previous)previous.hidden=projectPage===0;if(next)next.hidden=end>=allProjects.length}

@@ -29,7 +29,7 @@
 .more-work button:hover{background:var(--ink);border-color:var(--ink)}
 .more-work .secondary-page{background:white;color:var(--ink);border-color:#aaa}.more-work .secondary-page:hover{background:var(--ink);color:white}
 .more-work span{font-size:11px;color:#666}
-.hidden{display:none!important}
+.hidden,[hidden]{display:none!important}
 .roles h3{color:var(--blue)}
 .roles-toggle{display:none;width:100%;margin:8px 0 0;padding:16px 22px;background:transparent;border:1px solid #3a3a3e;color:white;font:700 11px var(--font);text-transform:uppercase;letter-spacing:.1em;cursor:pointer;transition:.2s ease}
 .roles-toggle:hover,.roles-toggle:focus-visible{border-color:var(--blue);color:var(--blue)}

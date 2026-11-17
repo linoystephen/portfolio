@@ -27,5 +27,7 @@ export const projectsQuery=`*[_type == "project" && published == true] | order(o
 
 export const settingsQuery=`*[_type == "siteSettings"][0]{
   "resumeUrl": resume.asset->url,
-  "resumeName": resume.asset->originalFilename
+  "resumeName": resume.asset->originalFilename,
+  "portfolioUrl": portfolioPdf.asset->url,
+  "portfolioName": portfolioPdf.asset->originalFilename
 }`
