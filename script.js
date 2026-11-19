@@ -51,6 +51,15 @@ function openProject(p){
   modal.querySelector('.slide-prev')?.addEventListener('click',()=>show(active-1));
   modal.querySelector('.slide-next')?.addEventListener('click',()=>show(active+1));
   modal.querySelector('.modal-close').onclick=()=>modal.close();
+  if(media.length>1){
+    const caseStage=modal.querySelector('.case-stage');
+    let touchStartX=0,touchStartY=0;
+    caseStage.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY},{passive:true});
+    caseStage.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-touchStartX,dy=e.changedTouches[0].clientY-touchStartY;
+      if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))show(dx<0?active+1:active-1);
+    },{passive:true});
+  }
   if(media.length)show(0);
   modal.showModal();
 }
